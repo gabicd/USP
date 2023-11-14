@@ -6,7 +6,7 @@
 	dec: .space 12
 	bin: .space 34
 	hex: .space 40 	#teste: tem que ter 40 bytes para armazenar 10 elementos inteiros.
-	rom: .space 13
+	rom: .space 13	
 	error2: .asciiz "\nDigito ou numero invalido\n"
 	error3: .asciiz "\nO numero inserido ja esta nessa base\n"
 	espaco: .asciiz "\n"
@@ -62,8 +62,8 @@ main:
 		#LER SEGUNDA OPÇÃO:
 		li $v0, 12		#12 ->ler char. Vai para $v0
 		syscall
-		move $s2, $v0
-		move $s6, $v0		#salvar a segunda base em $s6
+		move $s2, $v0		#salvar a segunda base em $s2 (funcoes diretas)
+		move $s6, $v0		#salvar a segunda base em $s6 (funcoes intermediarias)
 		
 		#DESVIO
 		beq $s1, 68, dec2
@@ -77,7 +77,7 @@ main:
 			beq $s2, 72, dec2hex
 			beq $s2, 82, dec2rom
 			
-			beq $s6, 66, dec2bin			
+			beq $s6, 66, dec2bin	#para transformacoes "rom2..."		
 			beq $s6, 72, dec2hex									
 			j checar_base2
 						
@@ -219,7 +219,7 @@ string_to_int:
 	int2bin_primeiro:
 		# s1 = resultado
 		#t0 = cada numero TEMP
-		#t1 = cada numero multiplicado TEMP
+		#t1 = cada numero multiplicado vezes TEMP
 		#t2 = multiplicador TEMP
 		
 		sub $t0, $t0, 48
@@ -501,7 +501,6 @@ b2d_calculo:
 	
 bin2dec:
 	# o numero possui limite de 34 bits.	
-	# $s7 = contador de digitos
 	# $s1 = resultado
 	# $t0 = cada numero
 	# $t1 = multiplicador
@@ -513,16 +512,16 @@ bin2dec:
 	
 	j b2d_calculo
 	fim_b2d_calculo:
-	bne $s6, 68, transformei
+	bne $s6, 68, transformei	#caso a transformacao nao tenha como objetivo final um numero decimal, carrega o resultado da transformacao em decimal para a conversao desejada
 	j printar_resultado
 
 ################ BIN 2 HEX ###############
 bin2hex:
- j bin2dec
+ j bin2dec #conversao intermediaria
 
 ################ BIN 2 ROM ###############
 bin2rom:
- j bin2dec
+ j bin2dec #conversao intermediaria
 ################ HEX 2 DEC ###############
 string_to_int_H:
 	#s1 - resultado
@@ -580,15 +579,15 @@ hex2dec:
 
 	j string_to_int_H
 transformei_h:
-	bne $s6, 68, transformei
+	bne $s6, 68, transformei	#caso a transformacao nao tenha como objetivo final um numero decimal, carrega o resultado da transformacao em decimal para a conversao desejada
 	j printar_resultado
 	
 ################ HEX 2 BIN ###############
 hex2bin:
-j hex2dec
+j hex2dec #conversao intermediaria
 ################ HEX 2 ROM ###############
 hex2rom:
-j hex2dec
+j hex2dec #conversao intermediaria
 ################ ROM 2 DEC ###############
 repeticoes_fim:
 j inv_digito
@@ -721,9 +720,9 @@ rom2dec:					#inicia a transformacao
 	#possui um limite de 10 bits
 	#$s1 = resultado
 	#$t1 = conteudo do indice seguinte
-	#$t2 = armazena o numero do proximo indice
+	#$t2 = armazena o valor do proximo indice
 	#$t3 = conteudo do indice anterior
-	#$t4 = armazena o numero do indice anterior
+	#$t4 = armazena o valor do indice anterior
 	#$t5 = iterador loop
 	#t6 = tamanho vetor
 
@@ -740,12 +739,12 @@ rom2dec:					#inicia a transformacao
 	j transformar_rom
 
 	transformei_rom:
-	bne $s6, 68, transformei	
+	bne $s6, 68, transformei	#caso a transformacao nao tenha como objetivo final um numero decimal, carrega o resultado da transformacao em decimal para a conversao desejada		
 	j printar_resultado
 
 ################ ROM 2 BIN ###############
 rom2bin:
-j rom2dec
+j rom2dec #conversao intermediaria
 ################ ROM 2 HEX ###############
 rom2hex:
-j rom2dec
+j rom2dec #conversao intermediaria
