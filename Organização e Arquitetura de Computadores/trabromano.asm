@@ -31,12 +31,12 @@ main:
 	ler_base1:
 		#PRINTAR PRIMEIRA MENSAGEM
 		li $v0, 4		#4 -> printar string
-		la $a0, mens1		#endereÁo da string para printar
+		la $a0, mens1		#endere√ßo da string para printar
 		syscall			#printando
 	
-		#LER E SALVAR A PRIMEIRA OP«√O EM S1
+		#LER E SALVAR A PRIMEIRA OP√á√ÉO EM S1
 		li $v0, 12		#12 -> ler char. Vai para $v0
-		syscall			#ler a opÁ„o que o usu·rio escolheu
+		syscall			#ler a op√ß√£o que o usu√°rio escolheu
 		move $s1, $v0
 	
 		#DESVIO
@@ -55,11 +55,11 @@ main:
 	ler_base2:
 		#PRINTAR MENSAGEM 3
 		li $v0, 4		#4 -> printar string
-		la $a0, mens3		#endereÁo da string para printar
+		la $a0, mens3		#endere√ßo da string para printar
 		syscall
 	
 		
-		#LER SEGUNDA OP«√O:
+		#LER SEGUNDA OP√á√ÉO:
 		li $v0, 12		#12 ->ler char. Vai para $v0
 		syscall
 		move $s2, $v0
@@ -70,7 +70,7 @@ main:
 		beq $s1, 72, hex2
 		beq $s1, 82, rom2
 		dec2:
-			j string_to_int	#s1 tem o resultado da transformaÁ„o para inteiro
+			j string_to_int	#s1 tem o resultado da transforma√ß√£o para inteiro
 			transformei:
 			beq $s2, 66, dec2bin
 			beq $s2, 72, dec2hex
@@ -144,10 +144,10 @@ ler_decimal:
 	la $a0, mens2		
 	syscall			#printando
 	
-	#SALVAR O DECIMAL NA MEM”RIA
+	#SALVAR O DECIMAL NA MEM√ìRIA
 	li $v0, 8		#8 -> ler vetor de caracteres
-	la $a0, dec		#endereÁo da memÛria que vou salvar
-	li $a1, 12		#numero m·ximo de caracteres a ler
+	la $a0, dec		#endere√ßo da mem√≥ria que vou salvar
+	li $a1, 12		#numero m√°ximo de caracteres a ler
 	syscall
 	
 	j ler_base2
@@ -159,10 +159,10 @@ ler_binario:
 	la $a0, mens2		
 	syscall			#printando
 	
-	#SALVAR O BINARIO NA MEM”RIA
+	#SALVAR O BINARIO NA MEM√ìRIA
 	li $v0, 8		#8 -> ler vetor de caracteres
-	la $a0, bin		#endereÁo da memÛria onde vou salvar
-	li $a1, 34		#n˙mero m·ximo de caracteres a ler
+	la $a0, bin		#endere√ßo da mem√≥ria onde vou salvar
+	li $a1, 34		#n√∫mero m√°ximo de caracteres a ler
 	syscall
 
 	j ler_base2
@@ -174,10 +174,10 @@ ler_hexadecimal:
 	la $a0, mens2		
 	syscall			#printando
 	
-	#SALVAR O HEXADECIMAL NA MEM”RIA
+	#SALVAR O HEXADECIMAL NA MEM√ìRIA
 	li $v0, 8		#8 -> ler vetor de caracteres
-	la $a0, hex		#endereÁo da memÛria onde vou salvar
-	li $a1, 10		#n˙mero m·ximo de caracteres a ler
+	la $a0, hex		#endere√ßo da mem√≥ria onde vou salvar
+	li $a1, 10		#n√∫mero m√°ximo de caracteres a ler
 	syscall
 	
 	j ler_base2
@@ -188,17 +188,17 @@ ler_romano:
 	la $a0, mens2		
 	syscall			#printando
 	
-	#SALVAR O ROMANO NA MEM”RIA
+	#SALVAR O ROMANO NA MEM√ìRIA
 	li $v0, 8		#8 -> ler vetor de caracteres
-	la $a0, rom		#endereÁo da memÛria onde vou salvar
-	li $a1, 13		#n˙mero m·ximo de caracteres a ler
+	la $a0, rom		#endere√ßo da mem√≥ria onde vou salvar
+	li $a1, 13		#n√∫mero m√°ximo de caracteres a ler
 	syscall
 	
 	j ler_base2
 	
 ################ DEC TO BIN ###############
 string_to_int:		
-	li $s1, 0	#n˙mero decimal (inteiro)
+	li $s1, 0	#n√∫mero decimal (inteiro)
 	li $t2, 0	#multiplicador
 	li $t5, 11	#indice loop
 	
@@ -244,7 +244,7 @@ d2b_divisao:
 	beq $s1, 0, d2b_acabou
 	
 	divu $s1, $s1, 2	
-	mfhi $t0		#t0 recebe o resto da divis„o 1 ou zero
+	mfhi $t0		#t0 recebe o resto da divis√£o 1 ou zero
 				#multiplicar por 10^seu peso (contador em $s5)
 	mul $t2, $t0, $t1
 	add $s2, $s2, $t2
@@ -256,7 +256,7 @@ d2b_divisao:
 		jr $ra 
 
 dec2bin:	
-	# --- $s1 CARREGA O N⁄MERO EM INT --- #
+	# --- $s1 CARREGA O N√öMERO EM INT --- #
 	
 	li $t5, 11
 	li $t1, 1
@@ -279,13 +279,13 @@ dec2bin:
 	
 d2h_divisao:
 	#vou salvar o resultado no vetor de char
-	#t0, resto de cada divis„o
+	#t0, resto de cada divis√£o
 	#s3, memoria onde salvar
-	#s1, elemento em decimal -> resultados das divisıes por 16
+	#s1, elemento em decimal -> resultados das divis√µes por 16
 	
 	
 	divu $s1, $s1, 16	#divide por 16, resultado deve ser printado
-	mfhi $t0		#t0 È o resto da divisao, que deve ser dividido de novo				
+	mfhi $t0		#t0 √© o resto da divisao, que deve ser dividido de novo				
 	
 	beqz $s1, d2h_ultima_div
 	
@@ -298,17 +298,17 @@ d2h_divisao:
 		addi $s1, $s1, 48
 	#FIM TRATAMENTO PARA LETRA
 	
-	#nesse ponto, s1 È o que devo salvar na memoria, e $t0 È o que devo dividir de novo
-	sw $s1, 0($s3)		#salva $s1 na memÛria
+	#nesse ponto, s1 √© o que devo salvar na memoria, e $t0 √© o que devo dividir de novo
+	sw $s1, 0($s3)		#salva $s1 na mem√≥ria
 	move $s1, $t0		#s1 reecbe o resto da divisao para dividir de novo
-	subi $s3, $s3, 4	#t1 recebe o endereÁo para salvar prÛximo resultado
+	subi $s3, $s3, 4	#t1 recebe o endere√ßo para salvar pr√≥ximo resultado
 	addi $s2, $s2, 1	#incrementa contador de casas
 	
 	j d2h_divisao
 	
 	d2h_ultima_div:
-		# aqui, a divis„o deu 0, teho que salvar o RESTO
-		# se o resto for zero, sÛ sai.
+		# aqui, a divis√£o deu 0, teho que salvar o RESTO
+		# se o resto for zero, s√≥ sai.
 		# $t0 = resto
 		
 		beqz $t0, d2h_acabou
@@ -332,9 +332,9 @@ dec2hex:
 	# $s2 = numero de casas do hexadecimal
 	
 	li $s2, 0		#contador
-	la $s3, hex		#endereÁo pra salvar
+	la $s3, hex		#endere√ßo pra salvar
 		
-	addi $s3, $s3, 37	#comeÁa do ultimo elemento do vetor
+	addi $s3, $s3, 37	#come√ßa do ultimo elemento do vetor
 	
 	jal d2h_divisao
 
@@ -343,10 +343,10 @@ dec2hex:
 	la $a0, espaco		
 	syscall	
 
-	# em t1 est· o index do ultimo elemento do vetor em HEXA
-	# em s2 est· o n˙mero de casas que o HEXADECIMAL tem
+	# em t1 est√° o index do ultimo elemento do vetor em HEXA
+	# em s2 est√° o n√∫mero de casas que o HEXADECIMAL tem
 	# 	usa-lo como contador para printar
-	# o resultado est· na memÛria! 
+	# o resultado est√° na mem√≥ria! 
 	la $s3, hex
 	addi $s3, $s3, 37
 	li $v0, 11
@@ -387,9 +387,9 @@ dec2hex:
 	j transformei_dec2rom
 	
 	algarismos_repetidos:
-	move $t4, $t1	#resultado da divisao È carregado em $t4, que servir· como indice para printar a quantidade correta
+	move $t4, $t1	#resultado da divisao √© carregado em $t4, que servir√° como indice para printar a quantidade correta
 	loop_print_r:
-	beqz $t4, retornar_divisoes	#sair do loop e voltar a transformar o n˙mero
+	beqz $t4, retornar_divisoes	#sair do loop e voltar a transformar o n√∫mero
 	li $v0, 4		
 	lw $a0, 0($s3)			#printar o algarismo equivalente ao divisor
 	syscall		
@@ -404,15 +404,15 @@ dec2hex:
 	j loop_divisoes_dec2rom
 		
 	divisoes_dec2rom:
-	beqz $t0, printar_primeiro_alg		#caso o numero seja composto por uma sÛ letra(X, III, CC etc.)/combinaÁ„o(IV, IX etc.)
+	beqz $t0, printar_primeiro_alg		#caso o numero seja composto por uma s√≥ letra(X, III, CC etc.)/combina√ß√£o(IV, IX etc.)
 	bnez $t0, printar_algarismos		#printar o primeiro numero dividido
 	loop_divisoes_dec2rom:
 	bltz $t2, transformei_dec2rom	#fim loop caso o indice seja menor que zero 
 	sll $t3, $t2, 2		#4 * i
 	sll $s3, $t2, 2		#4 * i
-	addu $t3, $t3, $t6 	#endereÁo correspondente ao indice (divisores)
-	addu $s3, $s3, $t7	#endereÁo correspondente ao indice (algarismos)
-	lw $t5, 0($t3)		#carregar conteudo do endereÁo em $t5
+	addu $t3, $t3, $t6 	#endere√ßo correspondente ao indice (divisores)
+	addu $s3, $s3, $t7	#endere√ßo correspondente ao indice (algarismos)
+	lw $t5, 0($t3)		#carregar conteudo do endere√ßo em $t5
 	div $t0, $t5		#dividir o resto pelo divisor atual
 	mflo $t1	
 	mfhi $t0	
@@ -426,23 +426,23 @@ dec2hex:
 	#carregar valor
 	sll $t3, $t2, 2		#4 * i
 	sll $s3, $t2, 2		#4 * i
-	addu $t3, $t3, $t6 	#endereÁo correspondente ao indice (divisores)
-	addu $s3, $s3, $t7	#endereÁo correspondente ao indice (algarismos)
-	lw $t5, 0($t3)		#carregar conteudo do endereÁo em $t5
+	addu $t3, $t3, $t6 	#endere√ßo correspondente ao indice (divisores)
+	addu $s3, $s3, $t7	#endere√ßo correspondente ao indice (algarismos)
+	lw $t5, 0($t3)		#carregar conteudo do endere√ßo em $t5
 	div $s1, $t5		#dividir o numero inserido pelo usuario pelo divisor atual
 	mflo $t1	
 	mfhi $t0		
 	subi $t2, $t2, 1	#reduzir indice
-	bne $t0, $s1, divisoes_dec2rom 	#se o resto nao for igual ao numero inserido, ele pÙde ser dividido e entrou na proxima funÁ„o
+	bne $t0, $s1, divisoes_dec2rom 	#se o resto nao for igual ao numero inserido, ele p√¥de ser dividido e entrou na proxima fun√ß√£o
 	j loop_encontrar_divisor	
 
 dec2rom:
-	bgt $s1, 3999, inv_digito # mostra mensagem de erro caso o decimal inserido esteja fora dos limites de representaÁ„o do sistema romano
+	bgt $s1, 3999, inv_digito # mostra mensagem de erro caso o decimal inserido esteja fora dos limites de representa√ß√£o do sistema romano
 	blez $s1, inv_digito
 	
 	li $t2, 12	#ultima posicao do indice	
-	la $t6, dec2rom_divisores	#carrega o endereÁo do vetor dos divisores em $t6
-	la $t7, dec2rom_algs		#carrega o endereÁo do vetor dos algarismos em $t7
+	la $t6, dec2rom_divisores	#carrega o endere√ßo do vetor dos divisores em $t6
+	la $t7, dec2rom_algs		#carrega o endere√ßo do vetor dos algarismos em $t7
 	#printa um \n para o resultado aparecer mais organizado
 	li $v0, 4		
 	la $a0, espaco		
@@ -475,7 +475,7 @@ b2d_calculo:
 	#ENCONTRAR O PRIMEIRO
 	encontrar_primeiro:
 
-		#t2 = zero atÈ encontrar um numero
+		#t2 = zero at√© encontrar um numero
 		
 		sub $t0, $t0, 48	#digito temporario subtraido
 		bltz $t0, inv	#pula se for invalido
@@ -493,7 +493,7 @@ b2d_calculo:
 			jr $ra
 			
 		inv:
-			jr $ra		#vai para o proximo sem realizar operaÁıes
+			jr $ra		#vai para o proximo sem realizar opera√ß√µes
 	
 bin2dec:
 	# o numero possui limite de 34 bits.	
@@ -501,9 +501,9 @@ bin2dec:
 	# $s1 = resultado
 	# $t0 = cada numero
 	# $t1 = multiplicador
-	# $t2 = index  		comeÁa com 32
+	# $t2 = index  		come√ßa com 32
 	# $t5 =  aux loop
-	# POR ENQUANTO, POR MAIS QUE O LIMITE SEJA 34 DIGITOS BIN¡RIOS, O C”DIGO S” SUPORTA 
+	# POR ENQUANTO, POR MAIS QUE O LIMITE SEJA 34 DIGITOS BIN√ÅRIOS, O C√ìDIGO S√ì SUPORTA 
 	# 8 DIGITOS
 	li $t5, 11
 	
@@ -532,7 +532,7 @@ string_to_int_H:
 	j transformei_h
 	
 	encontrar_primeiro_h:
-	#t2 = zero atÈ encontrar um numero
+	#t2 = zero at√© encontrar um numero
 			
 		sub $t0, $t0, 48	#digito temporario subtraido
 		ble $t0, 9, numero 
@@ -557,7 +557,7 @@ string_to_int_H:
 			jr $ra
 			
 		inv_h:
-			jr $ra		#vai para o proximo sem realizar operaÁıes
+			jr $ra		#vai para o proximo sem realizar opera√ß√µes
 
 hex2dec:
 	# o numero possui limite de 10 bits.
@@ -657,9 +657,9 @@ transformar_rom:
 	addi $s1, $s1, 10		#adiciona 1 ao resultado
 	addi $s5, $s5, 1
 	addi $t7, $t7, 1
+	beq $t3, 73, sub_1		#caso o conteudo do indice anterior seja I, subtrai 1 do resultado
 	beq $s5, 3, repeticoes_max
 	beq $s5, 4, repeticoes_fim
-	beq $t3, 73, sub_1		#caso o conteudo do indice anterior seja I, subtrai 1 do resultado
 	jr $ra
 
 	add_50:
@@ -673,9 +673,9 @@ transformar_rom:
 	addi $s1, $s1, 100		#adiciona 100 ao resultado
 	addi $s5, $s5, 1
 	addi $t7, $t7, 1
+	beq $t3, 88, sub_10		#caso o conteudo do indice anterior seja X, subtrai 10 do resultado
 	beq $s5, 3, repeticoes_max
 	beq $s5, 4, repeticoes_fim
-	beq $t3, 88, sub_10		#caso o conteudo do indice anterior seja X, subtrai 10 do resultado
 	jr $ra
 
 	add_500:
@@ -687,12 +687,12 @@ transformar_rom:
 	addi $s1, $s1, 1000	#adiciona 1000 ao resultado
 	addi $s5, $s5, 1
 	addi $t7, $t7, 1
+	beq $t3, 67, sub_100	#caso o conteudo do indice anterior seja C, subtrai 100 do resultado
 	beq $s5, 3, repeticoes_max
 	beq $s5, 4, repeticoes_fim
-	beq $t3, 67, sub_100	#caso o conteudo do indice anterior seja C, subtrai 100 do resultado
 	jr $ra
 
-	#funcoes auxiliares de subtraÁ„o	
+	#funcoes auxiliares de subtra√ß√£o	
 	sub_1:
 	subi $s1, $s1, 1
 	jr $ra
@@ -724,7 +724,7 @@ rom2dec:					#inicia a transformacao
 	li $t4, -1
 	li $t5, 0
 	li $t6, 13
-	la $s2, letras_rom #carregar endereÁo do vetor com os valores decimais na tabela ascii dos algarismos romanos
+	la $s2, letras_rom #carregar endere√ßo do vetor com os valores decimais na tabela ascii dos algarismos romanos
 	li $t8, 6 # ultimo indice do vetor letras_rom
 
 	j transformar_rom
