@@ -77,7 +77,8 @@ main:
 			beq $s2, 72, dec2hex
 			beq $s2, 82, dec2rom
 			
-			beq $s6, 66, dec2bin	#para transformacoes "rom2..."		
+			beq $s6, 82, dec2rom
+			beq $s6, 66, dec2bin			
 			beq $s6, 72, dec2hex									
 			j checar_base2
 						
@@ -281,6 +282,7 @@ dec2bin:
 	
 ################ DEC 2 HEX ###############	
 	
+	
 d2h_divisao:
 	#vou salvar o resultado no vetor de char
 	#t0, resto de cada divisão
@@ -293,6 +295,7 @@ d2h_divisao:
 	
 	beqz $s1, d2h_ultima_div
 	
+
 	
 	# TRATAMENTO PARA LETRA
 	blt $s1, 10, d2h_numero
