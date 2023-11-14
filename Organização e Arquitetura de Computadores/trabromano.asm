@@ -293,7 +293,6 @@ d2h_divisao:
 	
 	beqz $s1, d2h_ultima_div
 	
-
 	
 	# TRATAMENTO PARA LETRA
 	blt $s1, 10, d2h_numero
@@ -589,10 +588,15 @@ j hex2dec #conversao intermediaria
 hex2rom:
 j hex2dec #conversao intermediaria
 ################ ROM 2 DEC ###############
+reset_contagem:
+li $s5, 0
+jr $ra
+
 repeticoes_fim:
 j inv_digito
 
 repeticoes_max:
+bne $t3, $t0, reset_contagem
 beq $t1, $t0, ler_proximo
 li $s5, 0
 jr $ra
@@ -650,13 +654,14 @@ transformar_rom:
 	beq $t1, 88, ler_proximo	#caso o conteudo do proximo indice seja X, pular para a leitura desse indice
 	addi $s1, $s1, 1		#adiciona 1 ao resultado
 	addi $s5, $s5, 1
-	addi $t7, $t7, 1
+	beq $s5, 2, repeticoes_max
 	beq $s5, 3, repeticoes_max
 	beq $s5, 4, repeticoes_fim
 	jr $ra
 			
 	add_5:
 	addi $s1, $s1, 5	#adiciona 5 ao resultado
+	beq $t1, $t0, inv_digito
 	beq $t3, 73, sub_1	#caso o conteudo do indice anterior seja I, subtrai 1 do resultado
 	jr $ra
 
@@ -665,14 +670,15 @@ transformar_rom:
 	beq $t1, 67, ler_proximo	#caso o conteudo do proximo indice seja C, pular para a leitura desse indice
 	addi $s1, $s1, 10		#adiciona 1 ao resultado
 	addi $s5, $s5, 1
-	addi $t7, $t7, 1
 	beq $t3, 73, sub_1		#caso o conteudo do indice anterior seja I, subtrai 1 do resultado
+	beq $s5, 2, repeticoes_max
 	beq $s5, 3, repeticoes_max
 	beq $s5, 4, repeticoes_fim
 	jr $ra
 
 	add_50:
 	addi $s1, $s1, 50		#adiciona 50 ao resultado
+	beq $t1, $t0, inv_digito
 	beq $t3, 88, sub_10		#caso o conteudo do indice anterior seja X, subtrai 10 do resultado
 	jr $ra
 
@@ -681,22 +687,23 @@ transformar_rom:
 	beq $t1, 77, ler_proximo	#caso o conteudo do proximo indice seja M, pular para a leitura desse indice
 	addi $s1, $s1, 100		#adiciona 100 ao resultado
 	addi $s5, $s5, 1
-	addi $t7, $t7, 1
 	beq $t3, 88, sub_10		#caso o conteudo do indice anterior seja X, subtrai 10 do resultado
+	beq $s5, 2, repeticoes_max
 	beq $s5, 3, repeticoes_max
 	beq $s5, 4, repeticoes_fim
 	jr $ra
 
 	add_500:
 	addi $s1, $s1, 500	#adiciona 500 ao resultado
+	beq $t1, $t0, inv_digito
 	beq $t3, 67, sub_100	#caso o conteudo do indice anterior seja C, subtrai 100 do resultado
 	jr $ra
 	
 	add_1000:				
 	addi $s1, $s1, 1000	#adiciona 1000 ao resultado
 	addi $s5, $s5, 1
-	addi $t7, $t7, 1
 	beq $t3, 67, sub_100	#caso o conteudo do indice anterior seja C, subtrai 100 do resultado
+	beq $s5, 2, repeticoes_max
 	beq $s5, 3, repeticoes_max
 	beq $s5, 4, repeticoes_fim
 	jr $ra
@@ -716,6 +723,7 @@ transformar_rom:
 
 	ler_proximo:
 	jr $ra	
+	
 rom2dec:					#inicia a transformacao
 	#possui um limite de 10 bits
 	#$s1 = resultado
