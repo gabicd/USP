@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 int pesquisar(int *vetor, int pesquisa, int n);
-void ShellSort(int v[], int n);
 
 int main (){
 int n, k;
