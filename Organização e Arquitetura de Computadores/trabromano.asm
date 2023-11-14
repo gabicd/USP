@@ -45,7 +45,7 @@ main:
 		beq $v0, 72, ler_hexadecimal
 		beq $v0, 82, ler_romano
 	
-		beq $v0, 100, inv_digito	#caso seja inserida uma letra minuscula
+		beq $v0, 100, inv_digito	#caso seja inserida uma letra minuscula "d, b, h, r"
 		beq $v0, 98, inv_digito		
 		beq $v0, 104, inv_digito
 		beq $v0, 114, inv_digito	
@@ -63,6 +63,7 @@ main:
 		li $v0, 12		#12 ->ler char. Vai para $v0
 		syscall
 		move $s2, $v0
+		move $s6, $v0		#salvar a segunda base em $s6
 		
 		#DESVIO
 		beq $s1, 68, dec2
@@ -75,7 +76,9 @@ main:
 			beq $s2, 66, dec2bin
 			beq $s2, 72, dec2hex
 			beq $s2, 82, dec2rom
-						
+			
+			beq $s6, 66, dec2bin			
+			beq $s6, 72, dec2hex									
 			j checar_base2
 						
 		bin2:
@@ -96,7 +99,8 @@ main:
 			beq $s2, 66, rom2bin
 			beq $s2, 72, rom2hex
 			beq $s2, 68, rom2dec
-						
+								
+															
 			j checar_base2
 
 checar_base2:	
@@ -509,13 +513,16 @@ bin2dec:
 	
 	j b2d_calculo
 	fim_b2d_calculo:
+	bne $s6, 68, transformei
 	j printar_resultado
 
 ################ BIN 2 HEX ###############
 bin2hex:
+ j bin2dec
+
 ################ BIN 2 ROM ###############
 bin2rom:
-
+ j bin2dec
 ################ HEX 2 DEC ###############
 string_to_int_H:
 	#s1 - resultado
@@ -573,12 +580,15 @@ hex2dec:
 
 	j string_to_int_H
 transformei_h:
+	bne $s6, 68, transformei
 	j printar_resultado
 	
 ################ HEX 2 BIN ###############
 hex2bin:
+j hex2dec
 ################ HEX 2 ROM ###############
 hex2rom:
+j hex2dec
 ################ ROM 2 DEC ###############
 repeticoes_fim:
 j inv_digito
@@ -730,12 +740,12 @@ rom2dec:					#inicia a transformacao
 	j transformar_rom
 
 	transformei_rom:
+	bne $s6, 68, transformei	
 	j printar_resultado
 
 ################ ROM 2 BIN ###############
 rom2bin:
+j rom2dec
 ################ ROM 2 HEX ###############
 rom2hex:
-	#ENCERRAR PROGRAMA
-	li $v0, 10
-	syscall
+j rom2dec
