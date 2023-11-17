@@ -281,53 +281,35 @@ dec2bin:
 	syscall
 	
 ################ DEC 2 HEX ###############	
-	
-	
 d2h_divisao:
 	#vou salvar o resultado no vetor de char
 	#t0, resto de cada divisão
 	#s3, memoria onde salvar
 	#s1, elemento em decimal -> resultados das divisões por 16
+	#s4, correção de letra
 	
 	
 	divu $s1, $s1, 16	#divide por 16, resultado deve ser printado
 	mfhi $t0		#t0 é o resto da divisao, que deve ser dividido de novo				
 	
-	beqz $s1, d2h_ultima_div
-	
 
 	
 	# TRATAMENTO PARA LETRA
-	blt $s1, 10, d2h_numero
-	addi $s1, $s1, 7
-	d2h_numero:
-		addi $s1, $s1, 48
+	move $s4, $t0
+	blt $s4, 10, d2h_numero
+	addi $s4, $s4, 7
+	d2h_numero:,
+		addi $s4, $s4, 48
 	#FIM TRATAMENTO PARA LETRA
 	
 	#nesse ponto, s1 é o que devo salvar na memoria, e $t0 é o que devo dividir de novo
-	sw $s1, 0($s3)		#salva $s1 na memória
-	move $s1, $t0		#s1 reecbe o resto da divisao para dividir de novo
+	sw $s4, 0($s3)		#salva o resto da divisão na memória
+	
 	subi $s3, $s3, 4	#t1 recebe o endereço para salvar próximo resultado
 	addi $s2, $s2, 1	#incrementa contador de casas
-	
+
+	beqz $s1, d2h_acabou
 	j d2h_divisao
-	
-	d2h_ultima_div:
-		# aqui, a divisão deu 0, teho que salvar o RESTO
-		# se o resto for zero, só sai.
-		# $t0 = resto
-		
-		beqz $t0, d2h_acabou
-		addi $s2, $s2, 1	#incrementa contador de casas
-		
-		# TRATAMENTO LETRA
-		blt $t0, 10, d2h_numero_last
-		addi $t0, $t0, 7
-		
-		d2h_numero_last:
-		addi $t0, $t0, 48
-		
-		sw $t0, 0($s3)		#salva $t0 na memoria (ultimo)
 		 
 	d2h_acabou:
 		jr $ra
@@ -352,17 +334,16 @@ dec2hex:
 	# em t1 está o index do ultimo elemento do vetor em HEXA
 	# em s2 está o número de casas que o HEXADECIMAL tem
 	# 	usa-lo como contador para printar
-	# o resultado está na memória! 
-	la $s3, hex
-	addi $s3, $s3, 37
+	# o resultado está na memória no sentido correto!
+
 	li $v0, 11
-	
+	addi $s3, $s3, 4
 	d2h_printando:
 	
 		blez $s2, d2h_encerrar
 		subi $s2, $s2, 1
 		lw $a0, 0($s3)
-		subi $s3, $s3, 4
+		addi $s3, $s3, 4
 		syscall
 		j d2h_printando
 
@@ -370,6 +351,7 @@ dec2hex:
 		#ENCERRA PROGRAMA
 		li $v0, 10
 		syscall
+	
 	
 ################ DEC 2 ROM ###############									
 	retornar_divisoes:
