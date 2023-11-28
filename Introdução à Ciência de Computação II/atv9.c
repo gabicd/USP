@@ -1,31 +1,34 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define VAZIO -1
+
 typedef struct {
     int chave;
     int elemento;
 }
 t_elemento;
 
+typedef struct {
+    t_elemento *tabela;
+    int tamanho;
+} hashtable;
+
 int hashIndex(int elemento, int m);
-void hashInsert(int elemento,t_elemento hashVetor[], int m);
-int hashSearch(t_elemento hashVetor[], int elemento, int m);
-void hashRemove(t_elemento hashVetor[], int elemento, int m);
+void inicializarHash(hashtable *tabela,int m);
+void hashInsert(hashtable *hashT, int elemento);
+int hashSearch(hashtable *hashT, int elemento);
+void hashRemove(hashtable *hashT, int elemento);
 
 int main (){
 int elemento;
 unsigned int m, n, d, b;
 scanf("%u", &m);
-t_elemento *hashVetor = (t_elemento *)malloc(m * sizeof(t_elemento));   //cria o vetor da hash table e aloca a memoria necessaria
+hashtable hashT;
 
-for (int i = 0; i < m; i++)
-{
-    hashVetor[i].chave = -1;
-    hashVetor[i].elemento = -1;
-}
+inicializarHash(&hashT, m);
 
 scanf("%u", &n);
-
 for (int i = 0; i < n; i++)
 {
     scanf("%d", &elemento);
@@ -34,7 +37,7 @@ for (int i = 0; i < n; i++)
         return 0;
     }
     
-    hashInsert(elemento, hashVetor, m);
+    hashInsert(&hashT, elemento);
 }
 
 scanf("%u", &d);
@@ -46,7 +49,7 @@ scanf("%d", &remover[i]);
 
 for (int i = 0; i < d; i++)
 {
-   hashRemove(hashVetor, remover[i], m);   
+   hashRemove(&hashT, remover[i]);   
 }
 
 scanf("%u", &b);
@@ -58,13 +61,13 @@ scanf("%d", &busca[i]);
 
 for (int i = 0; i < b; i++)
 {
-    int resultado = hashSearch(hashVetor, busca[i], m);
+    int resultado = hashSearch(&hashT, busca[i]);
     printf("%d ", resultado);
 }
 
 printf("\n"); 
 
-free(hashVetor);
+free(hashT.tabela);
 free(busca);
 free(remover);
 
@@ -73,49 +76,61 @@ return 0;
 }
 
 int hashIndex(int elemento, int m){
-    return (elemento % m);
+    return elemento % m;
 }
 
-void hashInsert(int elemento,t_elemento hashVetor[], int m){
-    int index = hashIndex(elemento, m);
+void inicializarHash(hashtable *hashT, int m){
+    hashT->tabela = (t_elemento *)malloc(m * sizeof(t_elemento));
+    hashT->tamanho = m;
     
     for (int i = 0; i < m; i++)
     {
-        if (hashVetor[i].chave == index && hashVetor[i].elemento != elemento)
-        {
-            index+=1;
-        }
+       hashT->tabela[i].chave = VAZIO;
+       hashT->tabela[i].elemento = VAZIO;
     }
-    
-    hashVetor[index].chave = index;
-    hashVetor[index].elemento = elemento;
 
 }
 
-int hashSearch(t_elemento hashVetor[], int elemento, int m){
-    int index = hashIndex(elemento, m);
-    for (int i = 0; i < m; i++)
+void hashInsert(hashtable *hashT, int elemento){
+    int index = hashIndex(elemento, hashT->tamanho);
+    
+    for (int i = 0; i < hashT->tamanho; i++)
     {
-        if (hashVetor[i].chave == index && hashVetor[i].elemento != elemento)
+        if (hashT->tabela[i].chave == index && hashT->tabela[i].elemento != elemento)
         {
-            index+=1;
+             index = hashIndex(index+1, hashT->tamanho);
+        }   
+    }
+       
+    hashT->tabela[index].chave = index;
+    hashT->tabela[index].elemento = elemento;
+
+}
+
+int hashSearch(hashtable *hashT, int elemento){
+    int index = hashIndex(elemento, hashT->tamanho);
+    for (int i = 0; i < hashT->tamanho; i++)
+    {
+        if (hashT->tabela[i].chave == index && hashT->tabela[i].elemento != elemento)
+        {
+            index = hashIndex(index+1, hashT->tamanho);
         }
     }
-
-    if (elemento == hashVetor[index].elemento)
+    
+    if (elemento == hashT->tabela[index].elemento)
     {
         return index;
     }
-    
-        return -1;
+
+    return -1;
 
 }
 
-
-void hashRemove(t_elemento hashVetor[], int elemento, int m){
-    int pesquisa = hashSearch(hashVetor, elemento, m);
+void hashRemove(hashtable *hashT, int elemento){
+    int pesquisa = hashSearch(hashT, elemento);
     if (pesquisa != -1)
     {
-        hashVetor[pesquisa].elemento = -1;
+        hashT->tabela[pesquisa].elemento = VAZIO;
     }
 }
+
