@@ -8,14 +8,14 @@ typedef struct {
 t_elemento;
 
 int hashIndex(int elemento, int m);
-int hashInsert(int elemento,t_elemento hashVetor[], int m);
+void hashInsert(int elemento,t_elemento hashVetor[], int m);
 int hashSearch(t_elemento hashVetor[], int elemento, int m);
-int hashRemove(t_elemento hashVetor[], int elemento, int m);
+void hashRemove(t_elemento hashVetor[], int elemento, int m);
 
 int main (){
 int elemento;
-int m, n, d, b;
-scanf("%d", &m);
+unsigned int m, n, d, b;
+scanf("%u", &m);
 t_elemento *hashVetor = (t_elemento *)malloc(m * sizeof(t_elemento));   //cria o vetor da hash table e aloca a memoria necessaria
 
 for (int i = 0; i < m; i++)
@@ -24,7 +24,7 @@ for (int i = 0; i < m; i++)
     hashVetor[i].elemento = -1;
 }
 
-scanf("%d", &n);
+scanf("%u", &n);
 
 for (int i = 0; i < n; i++)
 {
@@ -37,7 +37,7 @@ for (int i = 0; i < n; i++)
     hashInsert(elemento, hashVetor, m);
 }
 
-scanf("%d", &d);
+scanf("%u", &d);
 int *remover = (int *)malloc(d *sizeof(int));
 for (int i = 0; i < d; i++)
 {
@@ -46,11 +46,10 @@ scanf("%d", &remover[i]);
 
 for (int i = 0; i < d; i++)
 {
-   hashRemove(hashVetor, remover[i], m);
-   
+   hashRemove(hashVetor, remover[i], m);   
 }
 
-scanf("%d", &b);
+scanf("%u", &b);
 int *busca = (int *)malloc(b *sizeof(int));
 for (int i = 0; i < b; i++)
 {
@@ -77,7 +76,7 @@ int hashIndex(int elemento, int m){
     return (elemento % m);
 }
 
-int hashInsert(int elemento,t_elemento hashVetor[], int m){
+void hashInsert(int elemento,t_elemento hashVetor[], int m){
     int index = hashIndex(elemento, m);
     
     for (int i = 0; i < m; i++)
@@ -85,10 +84,6 @@ int hashInsert(int elemento,t_elemento hashVetor[], int m){
         if (hashVetor[i].chave == index && hashVetor[i].elemento != elemento)
         {
             index+=1;
-        }
-        
-        if (hashVetor[i].chave == index && hashVetor[i].elemento == elemento){
-            return 0;
         }
     }
     
@@ -112,18 +107,15 @@ int hashSearch(t_elemento hashVetor[], int elemento, int m){
         return index;
     }
     
-    else {
         return -1;
-    }
 
 }
 
 
-int hashRemove(t_elemento hashVetor[], int elemento, int m){
+void hashRemove(t_elemento hashVetor[], int elemento, int m){
     int pesquisa = hashSearch(hashVetor, elemento, m);
     if (pesquisa != -1)
     {
         hashVetor[pesquisa].elemento = -1;
     }
-    return 0;
 }
