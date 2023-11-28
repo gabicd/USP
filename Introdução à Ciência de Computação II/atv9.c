@@ -29,6 +29,11 @@ scanf("%d", &n);
 for (int i = 0; i < n; i++)
 {
     scanf("%d", &elemento);
+    if (elemento < 0)
+    {
+        return 0;
+    }
+    
     hashInsert(elemento, hashVetor, m);
 }
 
@@ -94,17 +99,25 @@ int hashInsert(int elemento,t_elemento hashVetor[], int m){
 
 int hashSearch(t_elemento hashVetor[], int elemento, int m){
     int index = hashIndex(elemento, m);
+    for (int i = 0; i < m; i++)
+    {
+        if (hashVetor[i].chave == index && hashVetor[i].elemento != elemento)
+        {
+            index+=1;
+        }
+    }
 
     if (elemento == hashVetor[index].elemento)
     {
         return index;
     }
     
-    else{
+    else {
         return -1;
     }
 
 }
+
 
 int hashRemove(t_elemento hashVetor[], int elemento, int m){
     int pesquisa = hashSearch(hashVetor, elemento, m);
