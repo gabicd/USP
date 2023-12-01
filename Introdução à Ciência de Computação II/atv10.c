@@ -26,15 +26,28 @@ for (int i = 0; i < n; i++)
     strcpy(conjuntoreads[i], reads);
 }
 
-int maioroverlap = overlapsize(conjuntoreads[0], conjuntoreads[2]);
+int moverlap = 0;
+int r1, r2;
+for (int i = 0; i < n; i++)
+{
+    for (int j = i+1; j < n; j++)
+    {
+        if(overlapsize(conjuntoreads[i], conjuntoreads[j])> moverlap){
+            moverlap = overlapsize(conjuntoreads[i], conjuntoreads[j]);
+            r1=i;
+            r2 =j;
+        }
+        
+    }
+}
 
-printf("%s\n", overlapstring(conjuntoreads[0], conjuntoreads[2], maioroverlap));
+printf("%s\n", overlapstring(conjuntoreads[r1], conjuntoreads[r2],moverlap));
+
 
 for (int i = 0; i < n; i++)
 {
     free(conjuntoreads[i]);
 }
-
 
 return 0;
 
