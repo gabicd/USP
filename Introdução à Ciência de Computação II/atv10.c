@@ -11,6 +11,7 @@ int permutacao(int n);
 int overlapsize(char* read1, char* read2);
 char* overlapstring(char* read1, char* read2, int size);
 char* maiorstr (char* read1, char* read2);
+char* checksufix(char* read1, int size); 
 
 int r1, r2;
 
@@ -30,6 +31,7 @@ for (int i = 0; i < n; i++)
 }
 
     printf("%s\n", melhoroverlap(conjuntoreads, n));
+    
 
 for (int i = 0; i < n; i++)
 {
@@ -106,10 +108,18 @@ return novastr;
 char* overlapstring(char* read1, char* read2, int size){
 int tamfinal = strlen(read1) + strlen(read2) + 1;
 char* combinacao = (char *)malloc(tamfinal * sizeof(char));
+char* auxstr1 = checksufix(read1, size);
+char* auxstr2 = checksufix(read2, size);
 
-int fixo = strncmp(read1, read2, size);
-int suf = compstring(read1, read2, size);
-    if (fixo == 0)
+//read1 como parametro
+int prfx1 = strncmp(read1, read2, size);
+int sfx1 = strncmp(auxstr1, read2, size);
+//read2 como parametro    
+int prfx2 = strncmp(read2, read1, size);
+int sfx2 = strncmp(auxstr2, read1, size);
+//printf("%d\n%d\n",prfx1, sfx2);
+
+    if (prfx1 == 0)
     {
         for (int i = 0; i < strlen(read2); i++)
         {
@@ -122,7 +132,26 @@ int suf = compstring(read1, read2, size);
         }
     } 
 
-    else if (suf == 1)
+    else if (size == 0)
+    {    
+    combinacao = concatstr(read1,read2);
+    }
+
+        else if (sfx2 == 0)
+    {
+        for (int i = 0; i < strlen(read2); i++)
+        {
+            combinacao[i] = read2[i];
+        }
+        
+        for (int i = 0; i < strlen(read1)-size; i++)
+        {
+            combinacao[i+(strlen(read2))] = read1[i+size];
+        }
+    } 
+
+
+    else if (sfx1 == 0)
      {
         //printf("%d\n", fixo);
         for (int i = 0; i < strlen(read1); i++)
@@ -137,14 +166,11 @@ int suf = compstring(read1, read2, size);
 
     }
 
-    else if (size == 0)
-    {
+    
+    else{
         combinacao = maiorstr(read1, read2);
     }
 
-    else
-    combinacao = concatstr(read1,read2);
-    
     return combinacao;
 }
 
@@ -164,4 +190,17 @@ char* melhoroverlap(char** conjuntoreads, int n){
         }
 
     return overlapstring(conjuntoreads[r1], conjuntoreads[r2], moverlap);
+}
+
+char* checksufix(char* read1, int size){
+char* nstr = (char *)malloc((size+1)*sizeof(char));
+int aux = strlen(read1)-size;
+
+for (int i = 0; i <= size; i++)
+{
+    nstr[i] = read1[i+aux];
+}
+
+//printf("%s\n", nstr);
+return nstr;
 }
