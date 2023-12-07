@@ -4,75 +4,68 @@
 
 #define MAX 128
 
-char* concatstr(char* read1, char* read2);
-int compstring(char* read1, char* read2, int size);
-char* melhoroverlap(char** conjuntoreads, int n);
-int permutacao(int n);
+char* acharoverlap(char** conjuntoreads, int n);
 int overlapsize(char* read1, char* read2);
 char* overlapstring(char* read1, char* read2, int size);
+char* superstring(char* read1, char* read2, char* overlap, int size);
+char* concatstr(char* read1, char* read2);
 char* maiorstr (char* read1, char* read2);
-char* checksufix(char* read1, int size); 
 
 int r1, r2;
 
 int main (){
 int n;
+int t_aux;
+int t_ov;
 scanf("%d", &n);
-char **conjuntoreads = (char **)malloc(n * sizeof(char*));
+char **conjuntoreads = (char **)calloc(n, sizeof(char*));
+int* tamreads = (int *)calloc(n, sizeof(int));
+char *reads = (char *)calloc(MAX, sizeof(char));
 
-int j = 0;
+
 for (int i = 0; i < n; i++)
-{
-    char *reads = (char *)malloc(MAX * sizeof(char));
+{    
     scanf("%s", reads);
-    int tamreads = strlen(reads);
-    conjuntoreads[i] = (char *)malloc(tamreads * sizeof(char));
-    strcpy(conjuntoreads[i], reads);
+    tamreads[i] = strlen(reads);
+    conjuntoreads[i] = (char *)calloc((tamreads[i]+1), sizeof(char));
+    strncpy(conjuntoreads[i], reads, tamreads[i]);
 }
 
-    printf("%s\n", melhoroverlap(conjuntoreads, n));
+    free(reads);
+    free(tamreads); 
     
+    char *auxstr;
+    char* strfinal;
 
-for (int i = 0; i < n; i++)
-{
-    free(conjuntoreads[i]);
-}
+        auxstr = acharoverlap(conjuntoreads, n);
+        t_ov = overlapsize(conjuntoreads[r1], conjuntoreads[r2]);
+        strfinal = superstring(conjuntoreads[r1], conjuntoreads[r2], auxstr, t_ov);
+        
+    printf("%s\n", strfinal);
+    
+    for (int i = 0; i < n; i++)
+    {
+        conjuntoreads[i] = NULL;
+        free(conjuntoreads[i]);
+    }
+    
+    free(strfinal);
+    free(conjuntoreads);
 
 return 0;
 
 }
 
-int compstring(char* read1, char* read2, int size){
-char* sufixo = (char *)malloc((size+1) * sizeof(char));
-for (int i = 0; i < size; i++)
-{
-    sufixo[i] = read1[i+(strlen(read1)-size)];
-}
-
-if (strncmp(sufixo, read2, size) == 0)
-{
-    return 1;
-}
-
-return -1;
-}
-
-char* maiorstr (char* read1, char* read2){
-    if (strlen(read1)<strlen(read2))
-    {
-       return read1;   }
-    
-return read2;
-}
-
 int overlapsize(char* read1, char* read2){
-
-int chartcomp[strlen(read1)][strlen(read2)];
+int t1 = strlen(read1)+1;
+int t2 = strlen(read2)+1;
+int chartcomp[t1][t2];
 int maxover = 0;
 
-for (int i = 0; i <= strlen(read1); i++)
+
+for (int i = 0; i < t1; i++)
 {
-    for (int j = 0; j <= strlen(read2); j++)
+    for (int j = 0; j < t2; j++)
     {
          if (i == 0 || j == 0) {
                 chartcomp[i][j] = 0;
@@ -88,99 +81,46 @@ for (int i = 0; i <= strlen(read1); i++)
 return maxover;
 }
 
-char* concatstr(char* read1, char* read2){
-int tamnovo = strlen(read1) + strlen(read2) + 1;
-char* novastr = (char*)malloc(tamnovo * sizeof(char));
+char* overlapstring(char* read1, char* read2,int size){
+int t1 = strlen(read1)+1;
+int t2 = strlen(read2)+1;
+int k = 0;
+int chartcomp[t1][t2];
+char* overlap = (char*)malloc((size+1)*sizeof(char));
 
-for (int i = 0; i < strlen(read1); i++)
+for (int i = 0; i < t1; i++)
 {
-    novastr[i] = read1[i];
-}
-
-for (int i = 0; i < strlen(read2); i++)
-{
-    novastr[i+strlen(read1)] = read2[i];
-}
-
-return novastr;
-}
-
-char* overlapstring(char* read1, char* read2, int size){
-int tamfinal = strlen(read1) + strlen(read2) + 1;
-char* combinacao = (char *)malloc(tamfinal * sizeof(char));
-char* auxstr1 = checksufix(read1, size);
-char* auxstr2 = checksufix(read2, size);
-
-//read1 como parametro
-int prfx1 = strncmp(read1, read2, size);
-int sfx1 = strncmp(auxstr1, read2, size);
-//read2 como parametro    
-int prfx2 = strncmp(read2, read1, size);
-int sfx2 = strncmp(auxstr2, read1, size);
-//printf("%d\n%d\n",prfx1, sfx2);
-
-    if (prfx1 == 0)
+    for (int j = 0; j < t2; j++)
     {
-        for (int i = 0; i < strlen(read2); i++)
-        {
-            combinacao[i] = read2[i];
+         if (i == 0 || j == 0) {
+                chartcomp[i][j] = 0;
+            } else if (read1[i - 1] == read2[j - 1]) {
+                chartcomp[i][j] = chartcomp[i - 1][j - 1] + 1;
+                if (chartcomp[i][j] == size)
+                {
+                    int aux = i-size;
+                    for (k; k < size; k++)
+                    {
+                        overlap[k] = read1[aux];
+                        aux++;
+                    }
+                }
+            } else {
+                chartcomp[i][j] = 0;
         }
-        
-        for (int i = 0; i < strlen(read1)-size; i++)
-        {
-            combinacao[i+(strlen(read2))] = read1[i+size];
-        }
-    } 
-
-    else if (size == 0)
-    {    
-    combinacao = concatstr(read1,read2);
-    }
-
-        else if (sfx2 == 0)
-    {
-        for (int i = 0; i < strlen(read2); i++)
-        {
-            combinacao[i] = read2[i];
-        }
-        
-        for (int i = 0; i < strlen(read1)-size; i++)
-        {
-            combinacao[i+(strlen(read2))] = read1[i+size];
-        }
-    } 
-
-
-    else if (sfx1 == 0)
-     {
-        //printf("%d\n", fixo);
-        for (int i = 0; i < strlen(read1); i++)
-        {
-            combinacao[i] = read1[i];
-        }
-        
-        for (int i = 0; i < strlen(read2)-size; i++)
-        {
-            combinacao[i+(strlen(read1))] = read2[i+size];
-        }
-
-    }
-
-    
-    else{
-        combinacao = maiorstr(read1, read2);
-    }
-
-    return combinacao;
+   }
 }
 
-char* melhoroverlap(char** conjuntoreads, int n){
-    int moverlap = 0;
+return overlap;
+}
+
+char* acharoverlap(char** conjuntoreads, int n){
+    int moverlap = 0;    
         for (int i = 0; i < n; i++)
         {
             for (int j = i+1; j < n; j++)
             {
-                if(overlapsize(conjuntoreads[i], conjuntoreads[j])> moverlap){
+                if(overlapsize(conjuntoreads[i], conjuntoreads[j]) > moverlap){
                     moverlap = overlapsize(conjuntoreads[i], conjuntoreads[j]);
                     r1=i;
                     r2 =j;
@@ -188,19 +128,83 @@ char* melhoroverlap(char** conjuntoreads, int n){
                 
             }
         }
-
+  
     return overlapstring(conjuntoreads[r1], conjuntoreads[r2], moverlap);
 }
 
-char* checksufix(char* read1, int size){
-char* nstr = (char *)malloc((size+1)*sizeof(char));
-int aux = strlen(read1)-size;
+char* concatstr(char* read1, char* read2){
+int t1 = strlen(read1);
+int t2 = strlen(read2);
+int tamnovo = t1 + t2 + 2;
+char* novastr = (char*)malloc(tamnovo * sizeof(char));
 
-for (int i = 0; i <= size; i++)
+for (int i = 0; i < t1; i++)
 {
-    nstr[i] = read1[i+aux];
+    novastr[i] = read1[i];
 }
 
-//printf("%s\n", nstr);
-return nstr;
+for (int i = 0; i < t2; i++)
+{
+    novastr[i+t1] = read2[i];
+}
+
+return novastr;
+}
+
+char* maiorstr (char* read1, char* read2){
+int t1 = strlen(read1);
+int t2 = strlen(read2);
+
+    if (t1<t2)
+    {
+       return read1;   }
+    
+return read2;
+}
+
+char* superstring(char* read1, char* read2, char* overlap, int size){
+int tamnovo = strlen(read1) + strlen(read2) + 2;
+char* sstr = (char*)malloc(tamnovo * sizeof(char));
+int p1 = strncmp(read1, overlap, size); //read1 prefixo e read2 sufixo
+int p2 = strncmp(read2, overlap, size); //read2 prefixo e read1 sufixo
+
+    if (p1 == 0)
+    {
+        for (int i = 0; i < strlen(read2); i++)
+        {
+            sstr[i] = read2[i];
+        }
+
+        for (int i = 0; i < strlen(read1)-size; i++)
+        {
+            sstr[i+strlen(read2)] = read1[i+size];
+        }
+    
+    }
+
+    else if (p2 == 0)
+    {
+        for (int i = 0; i < strlen(read1); i++)
+        {
+            sstr[i] = read1[i];
+        }
+
+        for (int i = 0; i < strlen(read2)-size; i++)
+        {
+            sstr[i+strlen(read1)] = read2[i+size];
+        }
+    
+    }
+
+    else if (size == 0)
+    {
+        sstr = concatstr(read1, read2);
+    }
+    
+    else
+    {
+        sstr = maiorstr(read1, read2);
+    }
+
+    return sstr;
 }
