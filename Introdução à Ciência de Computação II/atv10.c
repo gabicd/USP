@@ -4,6 +4,8 @@
 
 #define MAX 64
 
+int strcompare(char* read1,int i, int t1, char* read2, int j, int t2);
+int min(int x, int y);
 char* acharoverlap(char** conjuntoreads, int n, char* overlap);
 int overlapsize(char* read1, char* read2);
 char* overlapstring(char* read1, char* read2, int size, char* overlap);
@@ -51,7 +53,6 @@ for (int i = 0; i < n; i++)
         }
         }
 
-
     printf("%s\n", conjuntoreads[0]);
     
     for (int i = 0; i < aux_n; i++)
@@ -61,7 +62,6 @@ for (int i = 0; i < n; i++)
             free(conjuntoreads[i]);
         }
     }
-    
 
     free(auxstr);
     free(conjuntoreads);
@@ -70,78 +70,105 @@ return 0;
 
 }
 
-int overlapsize(char* read1, char* read2){
-int t1 = strlen(read1)+1;
-int t2 = strlen(read2)+1;
-int chartcomp[t1][t2];
-int maxover = 0;
-
-
-for (int i = 0; i < t1; i++)
-{
-    for (int j = 0; j < t2; j++)
-    {
-         if (i == 0 || j == 0) {
-                chartcomp[i][j] = 0;
-            } else if (read1[i - 1] == read2[j - 1]) {
-                chartcomp[i][j] = chartcomp[i - 1][j - 1] + 1;
-                maxover = (chartcomp[i][j] > maxover) ? chartcomp[i][j] : maxover;
-            } else {
-                chartcomp[i][j] = 0;
-        }
-   }
+int min(int x, int y){
+    return(x < y) ? x : y;
 }
+
+int strcompare(char* read1,int i, int t1, char* read2, int j, int t2){
+int resultado = 0; 
+int k = 0;
+    while(k < t1)
+    {
+        if (read1[i+k] != read2[j+k])
+        {
+            resultado = 1;
+            break;
+        }
+            k++;
+    }
+    
+    return resultado; 
+}
+
+int overlapsize(char* read1, char* read2){
+int t1 = strlen(read1);
+int t2 = strlen(read2);
+int maxover = 0;
+    
+    for (int i = 1; i <= min(t1, t2); i++)
+    {
+        if (strcompare(read1, t1 - i, i, read2, 0, i) == 0)
+        {
+            if (maxover < i)
+            {
+                maxover = i;
+            }       
+        }
+    }
+
+    for (int i = 1; i <= min(t1, t2); i++)
+    {
+        if (strcompare(read1, 0, i, read2, t2-i, i) == 0)
+        {
+            if (maxover < i)
+            {
+                maxover = i;
+            }       
+        }
+    }
 
 return maxover;
 }
 
 char* overlapstring(char* read1, char* read2,int size, char* overlap){
-int t1 = strlen(read1)+1;
-int t2 = strlen(read2)+1;
-int k = 0;
-int chartcomp[t1][t2];
-
-
-for (int i = 0; i < t1; i++)
-{
-    for (int j = 0; j < t2; j++)
+int t1 = strlen(read1);
+int t2 = strlen(read2);
+    
+    for (int i = 1; i <= min(t1, t2); i++)
     {
-         if (i == 0 || j == 0) {
-                chartcomp[i][j] = 0;
-            } else if (read1[i - 1] == read2[j - 1]) {
-                chartcomp[i][j] = chartcomp[i - 1][j - 1] + 1;
-                if (chartcomp[i][j] == size)
+        if (strcompare(read1, t1 - i, i, read2, 0, i) == 0)
+        {
+            if (i == size)
+            {
+                for (int j = 0; j < size; j++)
                 {
-                    int aux = i-size;
-                    for (k; k < size; k++)
-                    {
-                        overlap[k] = read1[aux];
-                        aux++;
-                    }
+                    overlap[j] = read2[j];
                 }
-            } else {
-                chartcomp[i][j] = 0;
+                
+            }       
         }
-   }
-}
+    }
+    
+    for (int i = 1; i <= min(t1, t2); i++)
+    {
+        if (strcompare(read1, 0, i, read2, t2-i, i) == 0)
+        {
+            if (i == size)
+            {
+                for (int j = 0; j < size; j++)
+                {
+                    overlap[j] = read1[j];
+                }
+            }       
+        }
+    }
 
 return overlap;
 }
 
 char* acharoverlap(char** conjuntoreads, int n, char* overlap){
-    int moverlap = 0;    
-        for (int i = 0; i < n; i++)
-        {
-            for (int j = i+1; j < n; j++)
+    int moverlap = 0;  
+            for (int i = 0; i < n; i++)
             {
-                if(overlapsize(conjuntoreads[i], conjuntoreads[j]) > moverlap){
+                for (int j = i+1; j < n; j++){
+                   if(overlapsize(conjuntoreads[i], conjuntoreads[j]) > moverlap){
                     moverlap = overlapsize(conjuntoreads[i], conjuntoreads[j]);
                     r1=i;
                     r2 =j;
                 }
-                
-            }
-        }
+             }
+        }                 
+
     overlap = overlapstring(conjuntoreads[r1], conjuntoreads[r2], moverlap, overlap);
     return overlap;
 }
@@ -193,7 +220,18 @@ int p2 = strncmp(read2, overlap, size); //read2 prefixo e read1 sufixo
     
     }
 
-    else if (size == 0)
+    else if (strcmp(overlap, read1) == 0 || strcmp(overlap, read2) == 0)    
+    {
+        if (sstr != NULL)
+        {
+            free(sstr);
+        }
+        int t = strlen(maiorstr(read1, read2))+1;
+        sstr = (char*)calloc(t, sizeof(char));
+        strncpy(sstr, maiorstr(read1, read2), t);
+    }
+
+    else 
     {
         if (sstr != NULL)
         {
@@ -213,16 +251,5 @@ int p2 = strncmp(read2, overlap, size); //read2 prefixo e read1 sufixo
         }
     }
     
-    else
-    {
-        if (sstr != NULL)
-        {
-            free(sstr);
-        }
-        int t = strlen(maiorstr(read1, read2))+1;
-        sstr = (char*)calloc(t, sizeof(char));
-        strncpy(sstr, maiorstr(read1, read2), t);
-    }
-
     return sstr;
 }
