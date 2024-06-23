@@ -3,6 +3,7 @@ package javacafe;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -13,44 +14,23 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class mainpageController {
-    private Stage stage;
-    private Scene scene;
-
+public class mainpageController extends pageNavigation {
    //funcoes de navegacao entre telas
-    public void goToOrder(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("orderpage.fxml"));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-    }
 
+  public void goToOrder(ActionEvent event) throws IOException {super.goToOrder(event);}
+
+ @Override
     public void goToItems(ActionEvent event) throws IOException {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setHeaderText("You are already on the items screen!");
+        alert.setHeaderText("You already are on the items screen!");
         alert.showAndWait();
     }
 
-    public void goToInventory(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("inventorypage.fxml"));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-    }
+    public void goToInventory(ActionEvent event) throws IOException {super.goToInventory(event);}
 
-    public void goToSales(ActionEvent event) throws IOException {
+    public void goToSales(ActionEvent event) throws IOException { super.goToSales(event); }
 
-    }
-
-    public void exitScreen(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("firstpage.fxml"));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-    }
+    public void exitScreen(ActionEvent event) throws IOException { super.exitScreen(event); }
 
     //funcoes de pedido
     public void takeCapuccino(ActionEvent event) throws IOException {}
