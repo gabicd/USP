@@ -9,7 +9,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="658.0" prefWidth="757.0" styleClass="background" stylesheets="@custom.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javacafe.mainpageController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="658.0" prefWidth="757.0" styleClass="background" stylesheets="@custom.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javacafe.inventoryController">
    <children>
       <VBox layoutX="-6.0" layoutY="-4.0" prefHeight="662.0" prefWidth="152.0" styleClass="upperpane" stylesheets="@custom.css">
          <children>
@@ -44,7 +44,7 @@
                <children>
                   <Pane layoutX="-18.0" layoutY="-26.0" prefHeight="104.0" prefWidth="201.0">
                      <children>
-                        <JFXButton layoutX="38.0" layoutY="-18.0" prefHeight="49.0" prefWidth="74.0" text="Button" textFill="TRANSPARENT">
+                        <JFXButton layoutX="38.0" layoutY="-18.0" onAction="#goToItems" prefHeight="49.0" prefWidth="74.0" text="Button" textFill="TRANSPARENT">
                            <graphic>
                               <ImageView fitHeight="96.0" fitWidth="96.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -55,7 +55,7 @@
                         </JFXButton>
                      </children>
                   </Pane>
-                  <JFXButton layoutX="22.0" layoutY="35.0" prefHeight="66.0" prefWidth="82.0" textFill="TRANSPARENT">
+                  <JFXButton layoutX="22.0" layoutY="35.0" onAction="#goToInventory" prefHeight="66.0" prefWidth="82.0" textFill="TRANSPARENT">
                      <graphic>
                         <ImageView fitHeight="96.0" fitWidth="96.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -70,7 +70,7 @@
                <children>
                   <Pane layoutY="39.0" prefHeight="72.0" prefWidth="152.0">
                      <children>
-                        <JFXButton layoutX="23.0" layoutY="-47.0" prefHeight="49.0" prefWidth="74.0" text="Button" textFill="TRANSPARENT">
+                        <JFXButton layoutX="23.0" layoutY="-47.0" onAction="#goToSales" prefHeight="49.0" prefWidth="74.0" text="Button" textFill="TRANSPARENT">
                            <graphic>
                               <ImageView fitHeight="96.0" fitWidth="96.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -243,5 +243,11 @@
             <Font name="Superstar" size="14.0" />
          </font>
       </Text>
+      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="369.0" layoutY="413.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@editstock.png" />
+         </image>
+      </ImageView>
+      <JFXButton layoutX="383.0" layoutY="486.0" onAction="#editStock" prefHeight="50.0" prefWidth="114.0" textFill="TRANSPARENT" />
    </children>
 </AnchorPane>
