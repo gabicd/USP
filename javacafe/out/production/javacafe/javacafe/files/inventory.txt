@@ -1,0 +1,7 @@
+capuccino:10
+latte:7
+mate:5
+espresso f:2
+espresso:0
+cookie:1
+brownie:3
